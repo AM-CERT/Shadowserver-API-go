@@ -8,8 +8,6 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"os"
-	"shadowserver/model"
-	"syscall"
 )
 
 const (
@@ -29,19 +27,6 @@ func ComputeHmac(secret string, data []byte) string {
 	d := h.Sum(nil)
 
 	return hex.EncodeToString(d)
-}
-
-// DiskUsage disk usage of path/disk
-func DiskUsage(path string) (disk model.DiskStatus) {
-	fs := syscall.Statfs_t{}
-	err := syscall.Statfs(path, &fs)
-	if err != nil {
-		return
-	}
-	disk.All = fs.Blocks * uint64(fs.Bsize)
-	disk.Free = fs.Bfree * uint64(fs.Bsize)
-	disk.Used = disk.All - disk.Free
-	return
 }
 
 // PrintJson print json string to stdout

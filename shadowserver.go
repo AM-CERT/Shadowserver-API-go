@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/AM-CERT/Shadowserver-API-go/model"
 	"github.com/go-resty/resty/v2"
 	_ "github.com/joho/godotenv/autoload"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
-	"shadowserver/model"
 	"strconv"
 	"strings"
 	"time"
@@ -52,7 +52,10 @@ func DownloadReports() ([]*model.ShadowserverReport, error) {
 	if err != nil {
 		return nil, err
 	}
-	disk := DiskUsage(reportsBaseDir)
+	disk, err := DiskUsage(reportsBaseDir)
+	if err != nil {
+		return nil, err
+	}
 
 	log.WithFields(log.Fields{
 		"Total MB": float64(disk.All) / float64(MB),

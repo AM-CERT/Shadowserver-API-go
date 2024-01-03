@@ -2,9 +2,7 @@
 Simple Golang program to access Shadowserver API
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/AM-CERT/Shadowserver-API-go)](https://goreportcard.com/report/github.com/AM-CERT/Shadowserver-API-go)
-![Discord](https://img.shields.io/discord/681699554189377567)
 ![GitHub last commit](https://img.shields.io/github/last-commit/AM-CERT/Shadowserver-API-go)
-![Docker Pulls](https://img.shields.io/docker/pulls/AM-CERT/Shadowserver-API-go)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/AM-CERT/Shadowserver-API-go)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/AM-CERT/Shadowserver-API-go)
 

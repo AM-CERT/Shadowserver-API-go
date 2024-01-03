@@ -6,3 +6,5 @@ bin/
 reports/*
 # exception to the rule
 !reports/.gitkeep
+# release dir
+Shadowserver-API-go-release-*/

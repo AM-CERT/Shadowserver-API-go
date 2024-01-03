@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/AM-CERT/Shadowserver-API-go"
+	"github.com/AM-CERT/Shadowserver-API-go/model"
 	nested "github.com/antonfisher/nested-logrus-formatter"
 	"github.com/go-co-op/gocron"
 	"github.com/joho/godotenv"
@@ -13,8 +15,6 @@ import (
 	"os"
 	"path"
 	"runtime"
-	"shadowserver"
-	"shadowserver/model"
 	"strconv"
 	"time"
 )
