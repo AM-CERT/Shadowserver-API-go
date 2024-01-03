@@ -1,0 +1,8 @@
+.idea/
+bin/
+.DS_Store
+
+# exclude everything
+reports/*
+# exception to the rule
+!reports/.gitkeep
