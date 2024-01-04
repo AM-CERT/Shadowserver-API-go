@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"flag"
 	"github.com/AM-CERT/Shadowserver-API-go"
-	"github.com/AM-CERT/Shadowserver-API-go/internal"
 	"github.com/AM-CERT/Shadowserver-API-go/model"
 	"github.com/go-co-op/gocron"
 	"github.com/joho/godotenv"
@@ -25,7 +24,7 @@ var (
 )
 
 func init() {
-	logger = internal.InitLogger()
+	logger = shadowserver.NewLogger()
 
 	flag.StringVar(&method, "method", "test/ping", "Request URI")
 	flag.StringVar(&param, "param", "{}", "JSON parameter")
@@ -48,7 +47,7 @@ func main() {
 	}
 
 	if os.Getenv("DEBUG") == "true" {
-		internal.SetDebug()
+		shadowserver.SetLoggingDebug()
 	}
 
 	flag.Parse()

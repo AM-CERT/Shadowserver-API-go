@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/AM-CERT/Shadowserver-API-go/internal"
 	"github.com/AM-CERT/Shadowserver-API-go/model"
 	"github.com/go-resty/resty/v2"
 	_ "github.com/joho/godotenv/autoload"
@@ -39,7 +38,7 @@ var (
 )
 
 func init() {
-	logger = internal.InitLogger()
+	logger = NewLogger()
 
 	shadowserverSecret = os.Getenv("SHADOWSERVER_SECRET")
 	shadowserverApiKey = os.Getenv("SHADOWSERVER_API_KEY")
