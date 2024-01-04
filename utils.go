@@ -6,7 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	log "github.com/sirupsen/logrus"
+	"github.com/AM-CERT/Shadowserver-API-go/internal"
 	"os"
 )
 
@@ -40,9 +40,9 @@ func PrintJson(data []byte, pretty bool) {
 		jsonString, err = json.Marshal(json.RawMessage(data))
 	}
 	if err != nil {
-		log.WithFields(log.Fields{
-			"err": err,
-		}).Fatal("failed to marshal json string")
+		internal.Logger.Fatal().
+			Err(err).
+			Msg("failed to marshal json string")
 	}
 
 	fmt.Print(string(jsonString))

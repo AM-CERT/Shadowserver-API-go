@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/AM-CERT/Shadowserver-API-go/internal"
 	"github.com/AM-CERT/Shadowserver-API-go/model"
 	"github.com/go-resty/resty/v2"
 	_ "github.com/joho/godotenv/autoload"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -57,11 +57,11 @@ func DownloadReports() ([]*model.ShadowserverReport, error) {
 		return nil, err
 	}
 
-	log.WithFields(log.Fields{
-		"Total MB": float64(disk.All) / float64(MB),
-		"Used  MB": float64(disk.Used) / float64(MB),
-		"Free  MB": float64(disk.Free) / float64(MB),
-	}).Info("Disk space check")
+	internal.Logger.Info().
+		Float64("Total MB", float64(disk.All)/float64(MB)).
+		Float64("Used MB", float64(disk.Used)/float64(MB)).
+		Float64("Free MB", float64(disk.Free)/float64(MB)).
+		Msg("disk space check")
 
 	if disk.Free < reportsMinDiskFreeInt {
 		return nil, errors.New("insufficient disk space")
@@ -97,36 +97,35 @@ func DownloadReports() ([]*model.ShadowserverReport, error) {
 			return nil, err
 		}
 
-		log.WithFields(log.Fields{
-			"day": dayStr,
-			"dir": dir,
-		}).Info("downloading reports")
+		internal.Logger.Info().
+			Str("day", dayStr).
+			Str("dir", dir).
+			Msg("downloading reports")
 
 		for _, report := range reportList {
 			reportFilePath := filepath.Join(dir, report.File)
 
 			if FileExists(reportFilePath) {
-				log.WithFields(log.Fields{
-					"reportFile": reportFilePath,
-				}).Info("report already downloaded")
+				internal.Logger.Warn().
+					Str("reportFile", reportFilePath).
+					Msg("report already downloaded")
 				continue
 			}
 
 			err = DownloadReport(report.Id, reportFilePath)
 			if err != nil {
-				log.WithFields(log.Fields{
-					"err":    err,
-					"report": report,
-				}).Error("failed to download report")
+				internal.Logger.Warn().
+					Err(err).
+					Msg("failed to download report")
 				continue
 			}
 
 			report.FilePath = reportFilePath
 			reportListFinal = append(reportListFinal, report)
 
-			log.WithFields(log.Fields{
-				"reportFile": report.File,
-			}).Info("successfully downloaded report")
+			internal.Logger.Warn().
+				Str("reportFile", report.File).
+				Msg("successfully downloaded report")
 		}
 	}
 

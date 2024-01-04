@@ -3,12 +3,10 @@ module github.com/AM-CERT/Shadowserver-API-go
 go 1.21
 
 require (
-	github.com/antonfisher/nested-logrus-formatter v1.3.1
 	github.com/go-co-op/gocron v1.37.0
 	github.com/go-resty/resty/v2 v2.11.0
 	github.com/joho/godotenv v1.5.1
-	github.com/sirupsen/logrus v1.9.3
-	github.com/zput/zxcTool v1.3.10
+	github.com/rs/zerolog v1.15.0
 	golang.org/x/sys v0.13.0
 )
 
