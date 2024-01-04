@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/AM-CERT/Shadowserver-API-go/internal"
 	"os"
 )
 
@@ -40,7 +39,7 @@ func PrintJson(data []byte, pretty bool) {
 		jsonString, err = json.Marshal(json.RawMessage(data))
 	}
 	if err != nil {
-		internal.Logger.Fatal().
+		logger.Fatal().
 			Err(err).
 			Msg("failed to marshal json string")
 	}

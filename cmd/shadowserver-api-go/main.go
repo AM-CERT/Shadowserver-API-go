@@ -9,6 +9,7 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/rs/zerolog"
 	"os"
 	"strconv"
 	"time"
@@ -20,9 +21,12 @@ var (
 	pretty      bool
 	reports     bool
 	reportsCron bool
+	logger      zerolog.Logger
 )
 
 func init() {
+	logger = internal.InitLogger()
+
 	flag.StringVar(&method, "method", "test/ping", "Request URI")
 	flag.StringVar(&param, "param", "{}", "JSON parameter")
 	flag.BoolVar(&pretty, "pretty", true, "Pretty print JSON")
@@ -31,16 +35,14 @@ func init() {
 }
 
 func main() {
-	internal.InitLogger()
-
-	internal.Logger.Info().
+	logger.Info().
 		Str("app", os.Args[0]).
 		Msg("starting")
 
 	// load .env environment variables
 	err := godotenv.Load()
 	if err != nil {
-		internal.Logger.Fatal().
+		logger.Fatal().
 			Err(err).
 			Msg("failed to load .env file")
 	}
@@ -54,7 +56,7 @@ func main() {
 	if reports {
 		_, err = shadowserver.DownloadReports()
 		if err != nil {
-			internal.Logger.Fatal().
+			logger.Fatal().
 				Err(err).
 				Msg("failed to make API call")
 		}
@@ -62,14 +64,14 @@ func main() {
 		// Schedule report download
 		scheduleEveryHours, err := strconv.Atoi(os.Getenv("REPORTS_DOWNLOAD_EVERY"))
 		if err != nil {
-			internal.Logger.Fatal().
+			logger.Fatal().
 				Err(err).
 				Msg("failed to get integer every hours value for scheduling")
 		}
 		s := gocron.NewScheduler(time.UTC)
 		_, err = s.Every(scheduleEveryHours).Hours().Do(shadowserver.DownloadReports)
 		if err != nil {
-			internal.Logger.Fatal().
+			logger.Fatal().
 				Err(err).
 				Msg("failed to schedule report download")
 		}
@@ -78,13 +80,13 @@ func main() {
 		p := make(model.ShadowserverParam)
 		err = json.Unmarshal([]byte(param), &p)
 		if err != nil {
-			internal.Logger.Fatal().
+			logger.Fatal().
 				Err(err).
 				Msg("failed to unmarshal json param")
 		}
 		data, err := shadowserver.CallApi(method, p)
 		if err != nil {
-			internal.Logger.Fatal().
+			logger.Fatal().
 				Err(err).
 				Msg("failed to make API call")
 		}

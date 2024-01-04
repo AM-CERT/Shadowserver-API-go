@@ -8,6 +8,7 @@ import (
 	"github.com/AM-CERT/Shadowserver-API-go/model"
 	"github.com/go-resty/resty/v2"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/rs/zerolog"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -34,9 +35,12 @@ var (
 	reportsBaseDir     string
 	reportsMinDiskFree string
 	client             *resty.Client
+	logger             zerolog.Logger
 )
 
 func init() {
+	logger = internal.InitLogger()
+
 	shadowserverSecret = os.Getenv("SHADOWSERVER_SECRET")
 	shadowserverApiKey = os.Getenv("SHADOWSERVER_API_KEY")
 	reportsBaseDir = os.Getenv("REPORTS_BASEDIR")
@@ -57,7 +61,7 @@ func DownloadReports() ([]*model.ShadowserverReport, error) {
 		return nil, err
 	}
 
-	internal.Logger.Info().
+	logger.Info().
 		Float64("Total MB", float64(disk.All)/float64(MB)).
 		Float64("Used MB", float64(disk.Used)/float64(MB)).
 		Float64("Free MB", float64(disk.Free)/float64(MB)).
@@ -97,7 +101,7 @@ func DownloadReports() ([]*model.ShadowserverReport, error) {
 			return nil, err
 		}
 
-		internal.Logger.Info().
+		logger.Info().
 			Str("day", dayStr).
 			Str("dir", dir).
 			Msg("downloading reports")
@@ -106,7 +110,7 @@ func DownloadReports() ([]*model.ShadowserverReport, error) {
 			reportFilePath := filepath.Join(dir, report.File)
 
 			if FileExists(reportFilePath) {
-				internal.Logger.Warn().
+				logger.Warn().
 					Str("reportFile", reportFilePath).
 					Msg("report already downloaded")
 				continue
@@ -114,7 +118,7 @@ func DownloadReports() ([]*model.ShadowserverReport, error) {
 
 			err = DownloadReport(report.Id, reportFilePath)
 			if err != nil {
-				internal.Logger.Warn().
+				logger.Error().
 					Err(err).
 					Msg("failed to download report")
 				continue
@@ -123,7 +127,7 @@ func DownloadReports() ([]*model.ShadowserverReport, error) {
 			report.FilePath = reportFilePath
 			reportListFinal = append(reportListFinal, report)
 
-			internal.Logger.Warn().
+			logger.Info().
 				Str("reportFile", report.File).
 				Msg("successfully downloaded report")
 		}

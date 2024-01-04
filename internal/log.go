@@ -6,10 +6,8 @@ import (
 	"time"
 )
 
-var Logger zerolog.Logger
-
-func InitLogger() {
-	Logger = zerolog.New(
+func InitLogger() zerolog.Logger {
+	return zerolog.New(
 		zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339},
 	).Level(zerolog.InfoLevel).With().Timestamp().Caller().Logger()
 }
